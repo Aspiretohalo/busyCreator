@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.busymango.busymangoBackend.project.mapper.SearchRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.busymango.busymangoBackend.project.model.entity.SearchRecord">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="keyword" column="keyword" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="insertUser" column="insert_user" jdbcType="BIGINT"/>
+            <result property="insertTime" column="insert_time" jdbcType="TIMESTAMP"/>
+            <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="deleteUser" column="delete_user" jdbcType="BIGINT"/>
+            <result property="deleteTime" column="delete_time" jdbcType="TIMESTAMP"/>
+            <result property="deleteFlag" column="delete_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,keyword,user_id,
+        insert_user,insert_time,update_user,
+        update_time,delete_user,delete_time,
+        delete_flag
+    </sql>
+    <insert id="saveSearchRecord" parameterType="com.busymango.busymangoBackend.project.model.dto.SearchRecordDTO">
+        INSERT INTO bcmcreate_search_record (user_id,
+                                             keyword,
+                                             insert_user,
+                                             insert_time,
+                                             delete_flag)
+        VALUES (#{userId, jdbcType=BIGINT},
+                #{keyword, jdbcType=VARCHAR},
+                #{userId, jdbcType=BIGINT},
+                NOW(),
+                '0')
+    </insert>
+</mapper>

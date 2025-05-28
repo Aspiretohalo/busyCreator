@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.busymango.busymangoBackend.user.mapper.UserVipMapper">
+
+    <resultMap id="BaseResultMap" type="com.busymango.busymangoBackend.user.model.entity.UserVip">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userid" column="userId" jdbcType="INTEGER"/>
+        <result property="membershiplevel" column="membershipLevel" jdbcType="VARCHAR"/>
+        <result property="membershipstatus" column="membershipStatus" jdbcType="VARCHAR"/>
+        <result property="registrationdate" column="registrationDate" jdbcType="DATE"/>
+        <result property="effectivedate" column="effectiveDate" jdbcType="DATE"/>
+        <result property="expirationdate" column="expirationDate" jdbcType="DATE"/>
+        <result property="points" column="points" jdbcType="INTEGER"/>
+        <result property="phonenumber" column="phoneNumber" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+        <result property="birthday" column="birthday" jdbcType="DATE"/>
+        <result property="creationdate" column="creationDate" jdbcType="TIMESTAMP"/>
+        <result property="lastupdateddate" column="lastUpdatedDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,userId,membershipLevel,
+        membershipStatus,registrationDate,effectiveDate,
+        expirationDate,points,phoneNumber,
+        email,address,birthday,
+        creationDate,lastUpdatedDate
+    </sql>
+
+    <!-- 新增通过 userAccount 查询用户的 SQL -->
+    <select id="selectVipByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT id,
+               userId,
+               membershipLevel,
+               membershipStatus,
+               registrationDate,
+               effectiveDate,
+               expirationDate,
+               points,
+               phoneNumber,
+               email,
+               address,
+               birthday,
+               creationDate,
+               lastUpdatedDate
+        FROM user_vip
+        WHERE userId = #{userId}
+    </select>
+</mapper>

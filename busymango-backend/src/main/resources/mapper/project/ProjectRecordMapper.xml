@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.busymango.busymangoBackend.project.mapper.ProjectRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.busymango.busymangoBackend.project.model.entity.ProjectRecord">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="projectId" column="project_id" jdbcType="BIGINT"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="contentAdd" column="content_add" jdbcType="VARCHAR"/>
+        <result property="contentMinus" column="content_minus" jdbcType="VARCHAR"/>
+        <result property="teamId" column="team_id" jdbcType="BIGINT"/>
+        <result property="insertUser" column="insert_user" jdbcType="BIGINT"/>
+        <result property="insertTime" column="insert_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="deleteUser" column="delete_user" jdbcType="BIGINT"/>
+        <result property="deleteTime" column="delete_time" jdbcType="TIMESTAMP"/>
+        <result property="deleteFlag" column="delete_flag" jdbcType="VARCHAR"/>
+        <result property="isSubmit" column="is_submit" jdbcType="VARCHAR"/>
+        <result property="recordComment" column="record_comment" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!-- ProjectRecordVO 的 resultMap -->
+    <resultMap id="ProjectRecordVOResultMap" type="com.busymango.busymangoBackend.project.model.vo.ProjectRecordVO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="projectId" column="project_id" jdbcType="BIGINT"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="contentAdd" column="content_add" jdbcType="VARCHAR"/>
+        <result property="contentMinus" column="content_minus" jdbcType="VARCHAR"/>
+        <result property="teamId" column="team_id" jdbcType="BIGINT"/>
+        <result property="insertUser" column="insert_user" jdbcType="BIGINT"/>
+        <result property="insertTime" column="insert_time" jdbcType="TIMESTAMP"/>
+        <result property="recordComment" column="record_comment" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,project_id,content,
+        content_add,content_minus,team_id,
+        insert_user,insert_time,update_user,
+        update_time,delete_user,delete_time,
+        delete_flag,is_submit,record_comment
+    </sql>
+    <sql id="ProjectRecordVO_Column_List">
+        id,project_id,content, content_add,content_minus,team_id,insert_user,insert_time,is_submit,record_comment
+    </sql>
+    <insert id="createProjectRecord" parameterType="com.busymango.busymangoBackend.project.model.dto.ProjectRecordDTO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bcmcreate_project_record (project_id,
+                                              content,
+                                              insert_user,
+                                              insert_time,
+                                              delete_flag,
+                                              is_submit)
+        VALUES (#{projectId, jdbcType=BIGINT},
+                #{content, jdbcType=VARCHAR},
+                #{userId, jdbcType=BIGINT},
+                NOW(),
+                '0',
+                '0')
+    </insert>
+    <update id="saveProjectRecord" parameterType="com.busymango.busymangoBackend.project.model.dto.ProjectRecordDTO">
+        UPDATE bcmcreate_project_record
+        SET content = #{content, jdbcType=VARCHAR}
+        WHERE id = #{id, jdbcType=BIGINT}
+    </update>
+    <update id="submitProjectRecord"
+            parameterType="com.busymango.busymangoBackend.project.model.dto.ProjectRecordSubmitDTO">
+        UPDATE bcmcreate_project_record
+        SET is_submit     = '1',
+            record_comment=#{recordComment, jdbcType=VARCHAR}
+        WHERE id = #{id, jdbcType=BIGINT}
+    </update>
+    <select id="getProjectRecordById" parameterType="long" resultMap="ProjectRecordVOResultMap">
+        SELECT
+        <include refid="ProjectRecordVO_Column_List"/>
+        FROM
+        bcmcreate_project_record
+        WHERE
+        id = #{id, jdbcType=BIGINT}
+    </select>
+    <select id="listProjectRecord" resultMap="ProjectRecordVOResultMap" parameterType="list">
+        SELECT
+        <include refid="ProjectRecordVO_Column_List"/>
+        FROM
+        bcmcreate_project_record
+        WHERE delete_flag = '0'
+        AND (is_submit='1' OR (is_submit='0' AND insert_user=#{userId,jdbcType=BIGINT}))
+        AND project_id =#{projectId}
+        ORDER BY
+        insert_time DESC
+    </select>
+    <select id="listProjectRecordFormal" resultMap="ProjectRecordVOResultMap" parameterType="list">
+        SELECT
+        <include refid="ProjectRecordVO_Column_List"/>
+        FROM
+        bcmcreate_project_record
+        WHERE delete_flag = '0'
+        AND is_submit='1'
+        AND project_id =#{projectId}
+        ORDER BY
+        insert_time DESC
+    </select>
+</mapper>

@@ -1,0 +1,124 @@
+body {
+  margin: 0;
+  display: flex;
+  min-width: 1200px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0;
+}
+
+.main {
+  padding: 0;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.bgc {
+  background: url(assets/background/bg.png);
+  background-size: contain !important;
+}
+
+.w-margin {
+  margin: 50px auto;
+  width: 1200px;
+}
+
+.middle {
+  width: 97%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+#app {
+  width: 100%;
+  /* max-width: 1280px; */
+  /* text-align: center; */
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background: url(assets/background/bg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  a:hover {
+    color: #747bff;
+  }
+
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+.ultra-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  min-width: 80px;
+  height: 42px;
+  /* margin-top: 10px; */
+  color: #fff;
+  cursor: pointer;
+  border-radius: 8px;
+  background: linear-gradient(96.34deg, rgb(120, 90, 255) 0%, rgb(78, 110, 242) 100%);
+
+  &:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  /* background: linear-gradient(96.34deg, rgb(255, 184, 71) 0%, rgb(184, 204, 0) 100%);
+    
+        &:hover {
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          transform: scale(1.02);
+          transition: transform 0.2s, box-shadow 0.2s;
+        } */
+}
+
+.btn-mt10 {
+  margin-top: 10px;
+}
+
+/* 自定义滚动条样式 */
+.busy-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    /* 设置滚动条宽度 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* 滚动条颜色 */
+    border-radius: 4px;
+    /* 圆角 */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* 悬停时的颜色 */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* 滚动条轨道颜色 */
+  }
+}

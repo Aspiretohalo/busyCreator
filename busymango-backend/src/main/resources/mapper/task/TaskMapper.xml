@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.busymango.busymangoBackend.task.mapper.TaskMapper">
+
+    <resultMap id="BaseResultMap" type="com.busymango.busymangoBackend.task.model.entity.Task">
+        <id property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="projectName" column="project_name"/>
+        <result property="content" column="content"/>
+        <result property="assigneeId" column="assignee_id"/>
+        <result property="assigneeName" column="assignee_name"/>
+        <result property="finishDate" column="finish_date"/>
+        <result property="workTime" column="work_time"/>
+        <result property="note" column="note"/>
+        <result property="insertUser" column="insert_user"/>
+        <result property="insertTime" column="insert_time"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleteUser" column="delete_user"/>
+        <result property="deleteTime" column="delete_time"/>
+        <result property="deleteFlag" column="delete_flag"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,project_id,project_name,content,assignee_id,assignee_name,
+        finish_date,work_time,note,insert_user,insert_time,
+        update_user,update_time,delete_user,delete_time,delete_flag
+    </sql>
+    <sql id="TaskVO_Column_List">
+        id,project_id,project_name, content,assignee_id,assignee_name,finish_date,work_time, note,is_submitted,insert_user
+    </sql>
+    <insert id="createTask" parameterType="com.busymango.busymangoBackend.task.model.dto.TaskDTO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bcmcreate_task (project_id,
+                                    project_name,
+                                    content,
+                                    assignee_id,
+                                    assignee_name,
+                                    finish_date,
+                                    is_submitted,
+                                    insert_user,
+                                    insert_time,
+                                    delete_flag)
+        VALUES (#{projectId, jdbcType=BIGINT},
+                #{projectName, jdbcType=VARCHAR},
+                #{content, jdbcType=VARCHAR},
+                #{assigneeId, jdbcType=BIGINT},
+                #{assigneeName, jdbcType=VARCHAR},
+                #{finishDate, jdbcType=DATE},
+                '0',
+                #{insertUser, jdbcType=BIGINT},
+                NOW(),
+                '0')
+    </insert>
+    <update id="updateTask" parameterType="com.busymango.busymangoBackend.task.model.dto.TaskDTO">
+        UPDATE bcmcreate_task
+        SET work_time   = #{workTime, jdbcType=INTEGER},
+            note        = #{note, jdbcType=VARCHAR},
+            is_submitted='1'
+        WHERE id = #{id, jdbcType=BIGINT}
+    </update>
+    <select id="listAdminTask" parameterType="long" resultType="com.busymango.busymangoBackend.task.model.vo.TaskVO">
+        SELECT
+        <include refid="TaskVO_Column_List"/>
+        FROM
+        bcmcreate_task
+        WHERE
+        insert_user = #{userId,jdbcType=BIGINT}
+        AND assignee_id!=#{userId,jdbcType=BIGINT}
+        AND DELETE_FLAG='0'
+    </select>
+    <select id="listAssigneeTask" parameterType="long" resultType="com.busymango.busymangoBackend.task.model.vo.TaskVO">
+        SELECT
+        <include refid="TaskVO_Column_List"/>
+        FROM
+        bcmcreate_task
+        WHERE
+        assignee_id = #{userId,jdbcType=BIGINT}
+        AND DELETE_FLAG='0'
+    </select>
+
+</mapper>

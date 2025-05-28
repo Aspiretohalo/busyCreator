@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.busymango.busymangoBackend.project.mapper.ProjectMapper">
+
+    <resultMap id="BaseResultMap" type="com.busymango.busymangoBackend.project.model.entity.Project">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="profile" column="profile" jdbcType="VARCHAR"/>
+        <result property="cover" column="cover" jdbcType="VARCHAR"/>
+        <result property="tags" column="tags" jdbcType="VARCHAR"/>
+        <result property="version" column="version" jdbcType="BIGINT"/>
+        <result property="teamId" column="team_id" jdbcType="BIGINT"/>
+        <result property="isPublic" column="is_public" jdbcType="VARCHAR"/>
+        <result property="insertUser" column="insert_user" jdbcType="BIGINT"/>
+        <result property="insertTime" column="insert_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="deleteUser" column="delete_user" jdbcType="BIGINT"/>
+        <result property="deleteTime" column="delete_time" jdbcType="TIMESTAMP"/>
+        <result property="deleteFlag" column="delete_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!-- ProjectVO 的 resultMap -->
+    <resultMap id="ProjectVOResultMap" type="com.busymango.busymangoBackend.project.model.vo.ProjectVO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="profile" column="profile" jdbcType="VARCHAR"/>
+        <result property="cover" column="cover" jdbcType="VARCHAR"/>
+        <result property="version" column="version" jdbcType="BIGINT"/>
+        <result property="tags" column="tags" jdbcType="VARCHAR"/>
+        <result property="teamId" column="team_id" jdbcType="BIGINT"/>
+        <result property="isPublic" column="is_public" jdbcType="VARCHAR"/>
+        <result property="insertUser" column="insert_user" jdbcType="BIGINT"/>
+        <result property="insertTime" column="insert_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,profile,cover,tags,
+        version,team_id,is_public,
+        insert_user,insert_time,update_user,
+        update_time,delete_user,delete_time,
+        delete_flag
+    </sql>
+    <sql id="ProjectVO_Column_List">
+        id, name, profile,cover,tags, version,team_id,is_public, insert_user, insert_time, update_user, update_time
+    </sql>
+    <insert id="saveProject" parameterType="com.busymango.busymangoBackend.project.model.entity.Project"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bcmcreate_project (name,
+                                       profile,
+                                       cover,
+                                       version,
+                                       tags,
+                                       team_id,
+                                       is_public,
+                                       insert_user,
+                                       insert_time,
+                                       delete_flag)
+        VALUES (#{name, jdbcType=VARCHAR},
+                #{profile, jdbcType=VARCHAR},
+                #{cover, jdbcType=VARCHAR},
+                #{version, jdbcType=VARCHAR},
+                #{tags, jdbcType=VARCHAR},
+                #{teamId, jdbcType=BIGINT},
+                '0',
+                #{insertUser, jdbcType=BIGINT},
+                NOW(),
+                '0')
+    </insert>
+    <update id="updateVersion" parameterType="long">
+        UPDATE bcmcreate_project
+        SET version = #{versionId, jdbcType=BIGINT}
+        WHERE id = #{projectId, jdbcType=BIGINT}
+    </update>
+    <select id="getCount" resultType="java.lang.Long" parameterType="list">
+        SELECT COUNT(*)
+        FROM bcmcreate_project
+        WHERE delete_flag = '0'
+        AND team_id IN
+        <foreach item="teamId" collection="list" open="(" separator="," close=")">
+            #{teamId}
+        </foreach>
+    </select>
+    <select id="getworksCount" resultType="java.lang.Long" parameterType="list">
+        SELECT COUNT(*)
+        FROM bcmcreate_project
+        WHERE delete_flag = '0'
+        AND is_public='1'
+        AND team_id IN
+        <foreach item="teamId" collection="list" open="(" separator="," close=")">
+            #{teamId}
+        </foreach>
+    </select>
+
+    <select id="listItems" resultMap="ProjectVOResultMap" parameterType="list">
+        SELECT
+        <include refid="ProjectVO_Column_List"/>
+        FROM
+        bcmcreate_project
+        WHERE delete_flag = '0'
+        AND team_id IN
+        <foreach item="teamId" collection="list" open="(" separator="," close=")">
+            #{teamId}
+        </foreach>
+    </select>
+    <!-- 根据 ID 获取单个项目 -->
+    <select id="getItemById" parameterType="long" resultMap="ProjectVOResultMap">
+        SELECT
+        <include refid="ProjectVO_Column_List"/>
+        FROM
+        bcmcreate_project
+        WHERE id = #{id}
+    </select>
+    <select id="listWorks" resultMap="ProjectVOResultMap">
+        SELECT
+        <include refid="ProjectVO_Column_List"/>
+        FROM
+        bcmcreate_project
+        WHERE is_public = '1'
+        AND delete_flag = '0'
+    </select>
+    <select id="listItemsByTeamId" parameterType="long" resultMap="ProjectVOResultMap">
+        SELECT
+        <include refid="ProjectVO_Column_List"/>
+        FROM
+        bcmcreate_project
+        WHERE team_id = #{teamId}
+        AND delete_flag = '0'
+    </select>
+    <select id="searchItems" parameterType="String" resultMap="ProjectVOResultMap">
+        SELECT
+        <include refid="ProjectVO_Column_List"/>
+        FROM
+        bcmcreate_project
+        WHERE
+        delete_flag = '0'
+        AND is_public='1'
+        AND name LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+    <select id="listProjectsByTeamIds" parameterType="list"
+            resultType="com.busymango.busymangoBackend.project.model.vo.ProjectVO">
+        SELECT *
+        FROM bcmcreate_project
+        WHERE team_id IN
+        <foreach item="teamId" collection="list" open="(" separator="," close=")">
+            #{teamId}
+        </foreach>
+    </select>
+    <update id="updatePublicStatus" parameterType="long">
+        UPDATE bcmcreate_project
+        SET is_public = '1'
+        WHERE id = #{projectId, jdbcType=BIGINT}
+    </update>
+</mapper>

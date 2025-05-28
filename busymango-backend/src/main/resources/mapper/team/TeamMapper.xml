@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.busymango.busymangoBackend.team.mapper.TeamMapper">
+
+    <resultMap id="BaseResultMap" type="com.busymango.busymangoBackend.team.model.entity.Team">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="profile" column="profile" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="adminId" column="admin_id" jdbcType="BIGINT"/>
+        <result property="memberList" column="member_list" jdbcType="VARCHAR"/>
+        <result property="insertUser" column="insert_user" jdbcType="BIGINT"/>
+        <result property="insertTime" column="insert_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="deleteUser" column="delete_user" jdbcType="BIGINT"/>
+        <result property="deleteTime" column="delete_time" jdbcType="TIMESTAMP"/>
+        <result property="deleteFlag" column="delete_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="TeamVOResultMap" type="com.busymango.busymangoBackend.team.model.vo.TeamVO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="profile" column="profile" jdbcType="VARCHAR"/>
+        <result property="adminId" column="admin_id" jdbcType="BIGINT"/>
+        <result property="memberList" column="member_list" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,name,profile,avatar,admin_id,
+        member_list,insert_user,insert_time,
+        update_user,update_time,delete_user,
+        delete_time,delete_flag
+    </sql>
+    <sql id="TeamVO_Column_List">
+        id,name,profile,avatar,admin_id,member_list
+    </sql>
+    <insert id="saveTeam" parameterType="com.busymango.busymangoBackend.team.model.entity.Team" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO bcmcreate_team (name,
+                                    avatar,
+                                    profile,
+                                    admin_id,
+                                    member_list,
+                                    insert_user,
+                                    insert_time,
+                                    delete_flag)
+        VALUES (#{name, jdbcType=VARCHAR},
+                #{avatar, jdbcType=VARCHAR},
+                #{profile, jdbcType=VARCHAR},
+                #{adminId, jdbcType=BIGINT},
+                #{memberList, jdbcType=VARCHAR},
+                #{insertUser, jdbcType=BIGINT},
+                NOW(),
+                '0')
+    </insert>
+    <update id="updateTeam" parameterType="com.busymango.busymangoBackend.team.model.entity.Team">
+        UPDATE bcmcreate_team
+        SET
+        name = #{name, jdbcType=VARCHAR},
+        <if test="avatar != null">
+            avatar = #{avatar, jdbcType=VARCHAR},
+        </if>
+        profile = #{profile, jdbcType=VARCHAR},
+        update_user = #{updateUser, jdbcType=BIGINT},
+        update_time = NOW()
+        WHERE id = #{id, jdbcType=BIGINT}
+    </update>
+    <update id="joinTeam" parameterType="com.busymango.busymangoBackend.team.model.dto.TeamJoinDTO">
+        UPDATE bcmcreate_team
+        SET member_list = #{newMemberList, jdbcType=VARCHAR}
+        WHERE id = #{teamId, jdbcType=BIGINT}
+    </update>
+    <select id="getItemById" parameterType="long" resultMap="TeamVOResultMap">
+        SELECT
+        <include refid="TeamVO_Column_List"/>
+        FROM
+        bcmcreate_team
+        WHERE id = #{id}
+    </select>
+    <select id="listTeams" parameterType="long" resultMap="TeamVOResultMap">
+        SELECT
+        <include refid="TeamVO_Column_List"/>
+        FROM
+        bcmcreate_team
+        WHERE
+        FIND_IN_SET(#{userId, jdbcType=VARCHAR}, member_list) > 0
+    </select>
+    <select id="listTeamsNotJoin" parameterType="long" resultMap="TeamVOResultMap">
+        SELECT id,
+               name
+        FROM bcmcreate_team
+        WHERE FIND_IN_SET(#{userId, jdbcType=VARCHAR}, member_list) = 0
+    </select>
+    <select id="listAdminTeams" parameterType="long" resultMap="TeamVOResultMap">
+        SELECT
+        <include refid="TeamVO_Column_List"/>
+        FROM
+        bcmcreate_team
+        WHERE admin_id = #{userId}
+    </select>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.busymango.busymangoBackend.project.mapper.ProjectAuditMapper">
+
+    <resultMap id="BaseResultMap" type="com.busymango.busymangoBackend.project.model.entity.ProjectAudit">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="projectId" column="project_id" jdbcType="BIGINT"/>
+        <result property="projectRecordId" column="project_record_id" jdbcType="BIGINT"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="insertUser" column="insert_user" jdbcType="BIGINT"/>
+        <result property="insertTime" column="insert_time" jdbcType="DATE"/>
+        <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+        <result property="updateTime" column="update_time" jdbcType="DATE"/>
+        <result property="deleteUser" column="delete_user" jdbcType="BIGINT"/>
+        <result property="deleteTime" column="delete_time" jdbcType="DATE"/>
+        <result property="deleteFlag" column="delete_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,project_id,project_record_id,
+        status,insert_user,insert_time,
+        update_user,update_time,delete_user,
+        delete_time,delete_flag
+    </sql>
+    <insert id="createAuditRecord" parameterType="com.busymango.busymangoBackend.project.model.entity.ProjectAudit"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bcmcreate_project_audit (project_id,
+                                             project_record_id,
+                                             status,
+                                             insert_time,
+                                             delete_flag)
+        VALUES (#{projectId, jdbcType=BIGINT},
+                #{projectRecordId, jdbcType=BIGINT},
+                #{status, jdbcType=VARCHAR},
+                NOW(),
+                '0')
+    </insert>
+    <update id="updateAuditRecord"
+            parameterType="com.busymango.busymangoBackend.project.model.dto.ProjectAuditUpdateDTO">
+        UPDATE bcmcreate_project_audit
+        SET status = #{status, jdbcType=VARCHAR}
+        WHERE id = #{projectAuditId, jdbcType=BIGINT}
+    </update>
+</mapper>

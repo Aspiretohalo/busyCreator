@@ -1,0 +1,10 @@
+jieba
+pypinyin
+transformers
+datasets
+numpy
+pandas
+six
+loguru
+pyahocorasick
+flask

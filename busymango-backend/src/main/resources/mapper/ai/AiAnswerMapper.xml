@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.busymango.busymangoBackend.AI.mapper.AiAnswerMapper">
+
+    <resultMap id="BaseResultMap" type="com.busymango.busymangoBackend.AI.model.entity.AiAnswer">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="questionId" column="question_id" jdbcType="BIGINT"/>
+            <result property="answerText" column="answer_text" jdbcType="VARCHAR"/>
+            <result property="insertUser" column="insert_user" jdbcType="BIGINT"/>
+            <result property="insertTime" column="insert_time" jdbcType="DATE"/>
+            <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+            <result property="updateTime" column="update_time" jdbcType="DATE"/>
+            <result property="deleteUser" column="delete_user" jdbcType="BIGINT"/>
+            <result property="deleteTime" column="delete_time" jdbcType="DATE"/>
+            <result property="deleteFlag" column="delete_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,question_id,answer_text,
+        insert_user,insert_time,update_user,
+        update_time,delete_user,delete_time,
+        delete_flag
+    </sql>
+
+</mapper>

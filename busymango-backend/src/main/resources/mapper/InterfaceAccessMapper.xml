@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.busymango.busymangoBackend.core.mapper.InterfaceAccessMapper">
+
+    <resultMap id="BaseResultMap" type="com.busymango.busymangoBackend.core.model.entity.InterfaceAccess">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="interfacePath" column="interface_path" jdbcType="VARCHAR"/>
+        <result property="requestIp" column="request_ip" jdbcType="VARCHAR"/>
+        <result property="requestParams" column="request_params" jdbcType="VARCHAR"/>
+        <result property="responseTime" column="response_time" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="insertUser" column="insert_user" jdbcType="BIGINT"/>
+        <result property="insertTime" column="insert_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="deleteUser" column="delete_user" jdbcType="BIGINT"/>
+        <result property="deleteTime" column="delete_time" jdbcType="TIMESTAMP"/>
+        <result property="deleteFlag" column="delete_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,interface_path,request_ip,
+        request_params,response_time,user_id,
+        insert_user,insert_time,update_user,
+        update_time,delete_user,delete_time,
+        delete_flag
+    </sql>
+    <insert id="saveRequest"
+            parameterType="com.busymango.busymangoBackend.core.model.dto.interfaceAccess.InterfaceAccessDTO">
+        INSERT INTO bcmcreate_interface_access (interface_path,
+                                                request_ip,
+                                                request_params,
+                                                response_time,
+                                                user_id,
+                                                insert_user,
+                                                insert_time)
+        VALUES (#{interfacePath, jdbcType=VARCHAR},
+                #{requestIp, jdbcType=VARCHAR},
+                #{requestParams, jdbcType=VARCHAR},
+                #{responseTime, jdbcType=BIGINT},
+                #{userId, jdbcType=BIGINT},
+                #{userId, jdbcType=BIGINT},
+                NOW())
+    </insert>
+</mapper>

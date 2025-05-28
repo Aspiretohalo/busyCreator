@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.busymango.busymangoBackend.project.mapper.ProjectThumbMapper">
+
+    <resultMap id="BaseResultMap" type="com.busymango.busymangoBackend.project.model.entity.ProjectThumb">
+        <id property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="type" column="type"/>
+        <result property="insertUser" column="insert_user"/>
+        <result property="insertTime" column="insert_time"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleteUser" column="delete_user"/>
+        <result property="deleteTime" column="delete_time"/>
+        <result property="deleteFlag" column="delete_flag"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,project_id,user_id,type,insert_user,insert_time,
+        update_user,update_time,delete_user,delete_time,delete_flag
+    </sql>
+    <insert id="saveStatus" parameterType="com.busymango.busymangoBackend.project.model.entity.ProjectThumb"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bcmcreate_project_thumb (project_id,
+                                             user_id,
+                                             type,
+                                             insert_time,
+                                             delete_flag)
+        VALUES (#{projectId, jdbcType=BIGINT},
+                #{userId, jdbcType=BIGINT},
+                #{type, jdbcType=VARCHAR},
+                NOW(),
+                '0')
+    </insert>
+    <update id="cancelStatus" parameterType="com.busymango.busymangoBackend.project.model.dto.ProjectThumbDTO">
+        UPDATE bcmcreate_project_thumb
+        SET delete_flag ='1'
+        WHERE project_id = #{projectId, jdbcType=BIGINT}
+          AND user_id = #{userId, jdbcType=BIGINT}
+          AND type = #{type, jdbcType=VARCHAR}
+          AND delete_flag = '0'
+    </update>
+    <select id="judegExists" resultType="java.lang.Boolean"
+            parameterType="com.busymango.busymangoBackend.project.model.dto.ProjectThumbDTO">
+        SELECT count(1)
+        FROM bcmcreate_project_thumb
+        WHERE project_id = #{projectId, jdbcType=BIGINT}
+          AND user_id = #{userId, jdbcType=BIGINT}
+          AND type = #{type, jdbcType=VARCHAR}
+          AND delete_flag = '0'
+    </select>
+    <select id="getThumbCount" parameterType="long"
+            resultType="com.busymango.busymangoBackend.project.model.dto.ProjectThumbCountDTO">
+        SELECT COUNT(CASE WHEN type = 'thumb' THEN 1 END)   AS thumbCount,
+               COUNT(CASE WHEN type = 'collect' THEN 1 END) AS bookmarkCount
+        FROM bcmcreate_project_thumb
+        WHERE project_id = #{id, jdbcType=BIGINT}
+          AND delete_flag = '0'
+    </select>
+    <select id="getThumbStatus"
+            resultType="com.busymango.busymangoBackend.project.model.vo.ProjectThumbStatusVO">
+        SELECT
+            MAX(CASE WHEN type = 'thumb' THEN 1 ELSE 0 END) AS isThumbed,
+            MAX(CASE WHEN type = 'collect' THEN 1 ELSE 0 END) AS isBookmarked
+        FROM bcmcreate_project_thumb
+        WHERE user_id = #{userId, jdbcType=BIGINT}
+          AND project_id = #{projectId, jdbcType=BIGINT}
+          AND delete_flag = '0'
+    </select>
+</mapper>

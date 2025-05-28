@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.busymango.busymangoBackend.inspiration.mapper.InspirationMapper">
+
+    <resultMap id="BaseResultMap" type="com.busymango.busymangoBackend.inspiration.model.entity.Inspiration">
+            <id property="id" column="id" />
+            <result property="title" column="title" />
+            <result property="content" column="content" />
+            <result property="tags" column="tags" />
+            <result property="type" column="type" />
+            <result property="insertUser" column="insert_user" />
+            <result property="insertTime" column="insert_time" />
+            <result property="updateUser" column="update_user" />
+            <result property="updateTime" column="update_time" />
+            <result property="deleteUser" column="delete_user" />
+            <result property="deleteTime" column="delete_time" />
+            <result property="deleteFlag" column="delete_flag" />
+    </resultMap>
+    <resultMap id="InspirationVOResultMap" type="com.busymango.busymangoBackend.inspiration.model.vo.InspirationVO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="tags" column="tags" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,title,content,tags,type,insert_user,
+        insert_time,update_user,update_time,delete_user,delete_time,
+        delete_flag
+    </sql>
+    <sql id="InspirationVO_Column_List">
+        id
+        ,title,content,tags,type
+    </sql>
+    <select id="listInspirationByType" resultMap="InspirationVOResultMap">
+        SELECT
+        <include refid="InspirationVO_Column_List"/>
+        FROM
+        bcmcreate_inspiration
+        WHERE delete_flag='0'
+        AND type=#{type}
+        LIMIT 6
+    </select>
+    <select id="listInspiration" resultMap="InspirationVOResultMap">
+        SELECT
+        <include refid="InspirationVO_Column_List"/>
+        FROM
+        bcmcreate_inspiration
+        WHERE delete_flag='0'
+        LIMIT 6
+    </select>
+</mapper>
