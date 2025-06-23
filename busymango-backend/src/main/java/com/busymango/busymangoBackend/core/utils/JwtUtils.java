@@ -11,7 +11,7 @@ import cn.hutool.jwt.JWT;
 
 public class JwtUtils {
 
-    private static final String signKey = "yfyfyfyfyfyfyfyfyfyfyfyfyfyfyfyfyfyfyfyfyf";//key要足够长才满足其安全条件
+    private static final String signKey = "xlxlxlxlxlxlxlxlxlxlxlxlxlxlxlxlxlxl";//key要足够长才满足其安全条件
     private static final Long expire = 43200000L;
 
 //    public static String generateJwt(Map<String, Object> claims) {

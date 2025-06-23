@@ -137,7 +137,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         };
 
-        user.setJwt(JWTUtil.createToken(map, "yfyfyfyfyfyfyyfyfyfyfyfyfyfyfyfy".getBytes()));
+        user.setJwt(JWTUtil.createToken(map, "xlxlxlxlxlxlxlxlxlxlxlxlxlxlxlxlxlxl".getBytes()));
 //        request.getSession().setAttribute(USER_LOGIN_STATE, user);
         return user;
     }
